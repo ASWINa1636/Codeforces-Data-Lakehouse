@@ -1,11 +1,23 @@
 {{ config(
-    materialized='table'
+    materialized='incremental',
+    unique_key='problem_natural_key',
+    incremental_strategy='merge'
 ) }}
 
 SELECT
-    ROW_NUMBER() OVER (
-        ORDER BY contest_id, problem_index
+    md5(
+        concat(
+            contest_id,
+            ':',
+            problem_index
+        )
     ) AS problem_key,
+
+    concat(
+        contest_id,
+        ':',
+        problem_index
+    ) AS problem_natural_key,
 
     contest_id,
     problem_index,

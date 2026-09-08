@@ -1,0 +1,8 @@
+requests
+python-dotenv
+pydantic
+pydantic-settings
+duckdb
+pyarrow
+psycopg[binary]
+dbt-postgres==1.11.0

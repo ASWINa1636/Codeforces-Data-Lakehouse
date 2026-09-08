@@ -6,34 +6,44 @@ models:
 
     columns:
       - name: problem_key
-        description: "Surrogate key for the problem."
+        description: "Stable deterministic key derived from the Codeforces problem natural key."
+        tests:
+          - not_null
+          - unique
+
+      - name: problem_natural_key
+        description: "Natural identifier formed from contest_id and problem_index."
         tests:
           - not_null
           - unique
 
       - name: contest_id
-        description: "Codeforces contest identifier."
         tests:
           - not_null
 
       - name: problem_index
-        description: "Problem identifier within a contest."
         tests:
           - not_null
 
       - name: problem_name
-        description: "Codeforces problem name."
         tests:
           - not_null
+
 
   - name: fact_problem_statistics
     description: "Fact table containing Codeforces problem solve statistics."
 
     columns:
       - name: problem_key
-        description: "Foreign key to dim_problem."
+        description: "Stable key referencing dim_problem."
         tests:
           - not_null
+
+      - name: problem_natural_key
+        description: "Natural identifier for the Codeforces problem."
+        tests:
+          - not_null
+          - unique
 
       - name: contest_id
         tests:
@@ -44,6 +54,5 @@ models:
           - not_null
 
       - name: solved_count
-        description: "Number of users who solved the problem."
         tests:
           - not_null

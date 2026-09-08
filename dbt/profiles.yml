@@ -1,0 +1,13 @@
+codeforces_warehouse:
+  target: dev
+
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST', 'postgres') }}"
+      port: "{{ env_var('POSTGRES_PORT', '5432') | int }}"
+      user: "{{ env_var('POSTGRES_USER', 'codeforces') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD', 'codeforces_dev_password') }}"
+      dbname: "{{ env_var('POSTGRES_DATABASE', 'codeforces_dw') }}"
+      schema: analytics
+      threads: 4
