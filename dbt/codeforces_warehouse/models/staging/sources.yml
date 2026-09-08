@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: codeforces
+    schema: staging
+    description: "Codeforces data loaded into PostgreSQL staging."
+
+    tables:
+      - name: problems
+        description: "Codeforces problem metadata."
+
+      - name: problem_statistics
+        description: "Codeforces problem solve statistics."

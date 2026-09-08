@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: dim_problem
+    description: "Dimension containing Codeforces problem metadata."
+
+    columns:
+      - name: problem_key
+        description: "Surrogate key for the problem."
+        tests:
+          - not_null
+          - unique
+
+      - name: contest_id
+        description: "Codeforces contest identifier."
+        tests:
+          - not_null
+
+      - name: problem_index
+        description: "Problem identifier within a contest."
+        tests:
+          - not_null
+
+      - name: problem_name
+        description: "Codeforces problem name."
+        tests:
+          - not_null
+
+  - name: fact_problem_statistics
+    description: "Fact table containing Codeforces problem solve statistics."
+
+    columns:
+      - name: problem_key
+        description: "Foreign key to dim_problem."
+        tests:
+          - not_null
+
+      - name: contest_id
+        tests:
+          - not_null
+
+      - name: problem_index
+        tests:
+          - not_null
+
+      - name: solved_count
+        description: "Number of users who solved the problem."
+        tests:
+          - not_null

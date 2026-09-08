@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: codeforces-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: codeforces_dw
+      POSTGRES_USER: codeforces
+      POSTGRES_PASSWORD: codeforces_dev_password
+
+    ports:
+      - "5434:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U codeforces -d codeforces_dw"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

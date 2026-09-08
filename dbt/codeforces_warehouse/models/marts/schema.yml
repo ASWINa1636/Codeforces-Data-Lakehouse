@@ -1,0 +1,106 @@
+version: 2
+
+models:
+  - name: mart_problem_performance
+    description: >
+      Analytics-ready dataset combining Codeforces problem metadata
+      with solve statistics. One row represents one Codeforces problem.
+
+    columns:
+      - name: problem_key
+        description: "Unique warehouse identifier for a problem."
+        tests:
+          - not_null
+          - unique
+
+      - name: contest_id
+        description: "Codeforces contest identifier."
+        tests:
+          - not_null
+
+      - name: problem_index
+        description: "Problem position within a contest, such as A, B, or C."
+        tests:
+          - not_null
+
+      - name: problem_name
+        description: "Official Codeforces problem title."
+        tests:
+          - not_null
+
+      - name: problem_type
+        description: "Codeforces problem type."
+
+      - name: rating
+        description: "Codeforces difficulty rating."
+
+      - name: tags
+        description: "Comma-separated Codeforces problem tags."
+
+      - name: solved_count
+        description: "Number of users who solved the problem."
+        tests:
+          - not_null
+
+
+  - name: mart_rating_summary
+    description: >
+      Aggregated problem performance by Codeforces difficulty rating.
+
+    columns:
+      - name: rating
+        description: "Codeforces problem difficulty rating."
+        tests:
+          - not_null
+          - unique
+
+      - name: problem_count
+        description: "Number of problems at this rating."
+        tests:
+          - not_null
+
+      - name: total_solves
+        description: "Total solves across problems at this rating."
+        tests:
+          - not_null
+
+      - name: avg_solves
+        description: "Average number of solves per problem."
+        tests:
+          - not_null
+
+      - name: min_solves
+        description: "Minimum solve count among problems at this rating."
+
+      - name: max_solves
+        description: "Maximum solve count among problems at this rating."
+
+
+  - name: mart_tag_performance
+    description: >
+      Aggregated Codeforces problem performance by problem tag.
+
+    columns:
+      - name: tag
+        description: "Codeforces problem-solving tag."
+        tests:
+          - not_null
+          - unique
+
+      - name: problem_count
+        description: "Number of problems associated with the tag."
+        tests:
+          - not_null
+
+      - name: total_solves
+        description: "Total solves across problems using the tag."
+        tests:
+          - not_null
+
+      - name: avg_solves
+        description: "Average solves per problem using the tag."
+        tests:
+          - not_null
+
+      - name: avg_rating
+        description: "Average difficulty rating of problems using the tag."

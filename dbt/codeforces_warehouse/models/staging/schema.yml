@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: stg_problems
+    description: "Cleaned Codeforces problem metadata."
+
+    columns:
+      - name: contest_id
+        description: "Codeforces contest identifier."
+        tests:
+          - not_null
+
+      - name: problem_index
+        description: "Problem identifier within a contest, such as A or B."
+        tests:
+          - not_null
+
+      - name: problem_name
+        description: "Name of the Codeforces problem."
+        tests:
+          - not_null
+
+      - name: rating
+        description: "Codeforces difficulty rating."
+
+  - name: stg_problem_statistics
+    description: "Cleaned Codeforces problem statistics."
+
+    columns:
+      - name: contest_id
+        tests:
+          - not_null
+
+      - name: problem_index
+        tests:
+          - not_null
+
+      - name: solved_count
+        tests:
+          - not_null
