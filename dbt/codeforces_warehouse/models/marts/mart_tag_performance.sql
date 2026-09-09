@@ -9,7 +9,14 @@ WITH problem_tags AS (
         problem_name,
         rating,
         solved_count,
-        TRIM(tag) AS tag
+
+        TRIM(
+            BOTH '"' FROM
+            TRIM(
+                BOTH '[]' FROM
+                TRIM(tag)
+            )
+        ) AS tag
 
     FROM {{ ref('mart_problem_performance') }},
 
