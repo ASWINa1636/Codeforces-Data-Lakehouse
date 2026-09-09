@@ -5,4 +5,5 @@ pydantic-settings
 duckdb
 pyarrow
 psycopg[binary]
+dbt-core==1.12.3
 dbt-postgres==1.11.0

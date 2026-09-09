@@ -8,13 +8,14 @@ PROJECT_DIR = "/opt/airflow/project"
 
 
 COMMON_ENV = {
+    "PATH": "/home/airflow/.local/bin:/usr/python/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
     "PYTHONPATH": f"{PROJECT_DIR}/src",
     "POSTGRES_HOST": "postgres",
     "POSTGRES_PORT": "5432",
     "POSTGRES_DATABASE": "codeforces_dw",
     "POSTGRES_USER": "codeforces",
     "POSTGRES_PASSWORD": "codeforces_dev_password",
-    "DBT_PROFILES_DIR": f"{PROJECT_DIR}/dbt",
+    "DBT_PROFILES_DIR": f"{PROJECT_DIR}/dbt/codeforces_warehouse",
 }
 
 
@@ -58,7 +59,7 @@ with DAG(
         task_id="dbt_build",
         bash_command=(
             f"cd {PROJECT_DIR} && "
-            "dbt build "
+            "/home/airflow/.local/bin/dbt build "
             "--project-dir dbt/codeforces_warehouse"
         ),
         env=COMMON_ENV,
