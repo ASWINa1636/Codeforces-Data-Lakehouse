@@ -30,7 +30,7 @@ Power BI Dashboards
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 The goal of this project is to build a production-style data pipeline around Codeforces programming-problem data.
 
@@ -62,7 +62,7 @@ This provides an end-to-end demonstration of data engineering concepts including
 
 ---
 
-## 🎯 Objectives
+## Objectives
 
 The main objectives of this project are:
 
@@ -79,69 +79,147 @@ The main objectives of this project are:
 
 ---
 
-## 🏗️ Architecture
+## Complete Architecture Diagram
 
-```text
-                         ┌──────────────────────┐
-                         │     Codeforces API   │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │ Python Ingestion     │
-                         │ ingest_problemset.py │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │ Raw / Processed Data │
-                         │      Parquet         │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │ Python Processing    │
-                         │ process_problemset   │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                     ┌─────────────────────────────┐
-                     │       PostgreSQL Warehouse  │
-                     │        codeforces_dw        │
-                     └──────────────┬──────────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │         dbt          │
-                         │  Transform & Model   │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                     ┌─────────────────────────────┐
-                     │      Analytics Marts        │
-                     │                             │
-                     │ mart_problem_performance    │
-                     │ mart_rating_summary         │
-                     │ mart_tag_performance        │
-                     └──────────────┬──────────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │      Power BI        │
-                         │     Dashboards       │
-                         └──────────────────────┘
+```mermaid
+flowchart LR
 
-              ┌─────────────────────────────────────┐
-              │           Apache Airflow             │
-              │                                     │
-              │  Ingest → Process → Load → dbt     │
-              │                 → Validate          │
-              └─────────────────────────────────────┘
-````
+    %% =========================
+    %% Source Layer
+    %% =========================
+    subgraph Source["🌐 Source Layer"]
+        CF["🏆 Codeforces API<br/>Problemset API"]
+    end
 
+    %% =========================
+    %% Ingestion Layer
+    %% =========================
+    subgraph Ingestion["🐍 Ingestion Layer"]
+        INGEST["🐍 Python<br/>ingest_problemset.py"]
+    end
+
+    %% =========================
+    %% Data Lake Layer
+    %% =========================
+    subgraph Lake["🗄 Data Lake Layer"]
+        RAW["📦 Raw Data<br/>JSON / Parquet"]
+        PROCESSED["⚙️ Processed Data<br/>Parquet"]
+    end
+
+    %% =========================
+    %% Warehouse Layer
+    %% =========================
+    subgraph Warehouse["🐘 Data Warehouse Layer"]
+        PG["🐘 PostgreSQL 16<br/>Codeforces Warehouse"]
+
+        RAW_SCHEMA["📥 Raw / Staging<br/>Codeforces Data"]
+    end
+
+    %% =========================
+    %% Transformation Layer
+    %% =========================
+    subgraph Transformation["🔄 Transformation Layer"]
+        DBT["🔷 dbt<br/>Analytics Transformations"]
+
+        MARTS["📊 Analytics Marts<br/>Problem Performance<br/>Rating Summary<br/>Tag Performance"]
+    end
+
+    %% =========================
+    %% Orchestration Layer
+    %% =========================
+    subgraph Orchestration["⚙️ Orchestration Layer"]
+        AIRFLOW["🌬 Apache Airflow<br/>Daily Pipeline"]
+    end
+
+    %% =========================
+    %% Visualization Layer
+    %% =========================
+    subgraph Visualization["📈 Visualization Layer"]
+        PBI["📊 Power BI<br/>Interactive Dashboards"]
+    end
+
+    %% =========================
+    %% Developer / Monitoring Tools
+    %% =========================
+    subgraph DevTools["🛠 Development & Monitoring"]
+        DOCKER["🐳 Docker<br/>Containerized Services"]
+        PGADMIN["🗃 pgAdmin<br/>PostgreSQL Management"]
+    end
+
+
+    %% =========================
+    %% Main Data Flow
+    %% =========================
+
+    CF -- "REST API Request" --> INGEST
+
+    INGEST -- "Raw Dataset" --> RAW
+
+    RAW -- "Read & Process" --> PROCESSED
+
+    PROCESSED -- "Load Data" --> PG
+
+    PG --> RAW_SCHEMA
+
+    RAW_SCHEMA -- "dbt Models" --> DBT
+
+    DBT -- "Build" --> MARTS
+
+    MARTS --> PG
+
+    PG -- "DirectQuery / Import" --> PBI
+
+
+    %% =========================
+    %% Airflow Orchestration
+    %% =========================
+
+    AIRFLOW -. "1. Ingest" .-> INGEST
+    AIRFLOW -. "2. Process" .-> PROCESSED
+    AIRFLOW -. "3. Load" .-> PG
+    AIRFLOW -. "4. dbt Build" .-> DBT
+    AIRFLOW -. "5. Validate" .-> MARTS
+
+
+    %% =========================
+    %% Infrastructure
+    %% =========================
+
+    DOCKER -. "Runs Services" .-> AIRFLOW
+    DOCKER -. "Runs Database" .-> PG
+    DOCKER -. "Runs Tools" .-> PGADMIN
+
+    PG -. "Database Management" .-> PGADMIN
+
+
+    %% =========================
+    %% Styling
+    %% =========================
+
+    style Source fill:#1a1a2e,stroke:#00b4d8,color:#fff
+    style Ingestion fill:#1a1a2e,stroke:#3776ab,color:#fff
+    style Lake fill:#1a1a2e,stroke:#f4a261,color:#fff
+    style Warehouse fill:#1a1a2e,stroke:#4169e1,color:#fff
+    style Transformation fill:#1a1a2e,stroke:#4c6ef5,color:#fff
+    style Orchestration fill:#1a1a2e,stroke:#7b2cbf,color:#fff
+    style Visualization fill:#1a1a2e,stroke:#f2c811,color:#fff
+    style DevTools fill:#1a1a2e,stroke:#888,color:#fff
+
+    style CF fill:#0d1b2a,stroke:#00b4d8,color:#fff
+    style INGEST fill:#0d1b2a,stroke:#3776ab,color:#fff
+    style RAW fill:#0d1b2a,stroke:#f4a261,color:#fff
+    style PROCESSED fill:#0d1b2a,stroke:#f4a261,color:#fff
+    style PG fill:#0d1b2a,stroke:#4169e1,color:#fff
+    style DBT fill:#0d1b2a,stroke:#4c6ef5,color:#fff
+    style MARTS fill:#0d1b2a,stroke:#4c6ef5,color:#fff
+    style AIRFLOW fill:#0d1b2a,stroke:#7b2cbf,color:#fff
+    style PBI fill:#0d1b2a,stroke:#f2c811,color:#fff
+    style DOCKER fill:#0d1b2a,stroke:#2496ed,color:#fff
+    style PGADMIN fill:#0d1b2a,stroke:#888,color:#fff
+```
 ---
 
-## 🧰 Technology Stack
+## Technology Stack
 
 | Technology     | Purpose                                    |
 | -------------- | ------------------------------------------ |
@@ -157,7 +235,7 @@ The main objectives of this project are:
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 codeforces-data-lakehouse/
@@ -211,7 +289,16 @@ codeforces-data-lakehouse/
 
 ---
 
-# 🔄 Data Pipeline
+# Output
+
+> ![Airflow](screenshots/Airflow.png)
+
+> ![page1](screenshots/powerbi-page1.png)
+
+> ![page2](screenshots/powerbi-page2.png)
+
+
+# Data Pipeline
 
 The pipeline is orchestrated through an Apache Airflow DAG named:
 
@@ -349,7 +436,7 @@ after PostgreSQL loading is complete.
 
 ---
 
-# 📊 Analytics Data Models
+# Analytics Data Models
 
 The project currently contains analytical marts focused on three major areas.
 
@@ -413,7 +500,7 @@ The tag transformation separates tags from the problem-level dataset and aggrega
 
 ---
 
-# 🧹 Data Cleaning
+# Data Cleaning
 
 One important part of the project is handling Codeforces problem tags.
 
@@ -549,7 +636,7 @@ This allows Airflow tasks to execute the project scripts and dbt project directl
 
 ---
 
-# 📈 Power BI Analytics
+# Power BI Analytics
 
 The final analytical layer is consumed by Power BI.
 
@@ -694,7 +781,7 @@ The dashboard is designed to answer questions such as:
 
 ---
 
-# 🧠 Data Engineering Concepts Demonstrated
+#  Data Engineering Concepts Demonstrated
 
 This project demonstrates practical implementation of:
 
@@ -752,7 +839,7 @@ through the PostgreSQL + dbt architecture.
 
 ---
 
-# 🚀 Getting Started
+# Getting Started
 
 ## Prerequisites
 
@@ -770,7 +857,7 @@ Docker is the primary runtime environment for the pipeline.
 ## Clone the Repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/ASWINa1636/Codeforces-Data-Lakehouse
 
 cd codeforces-data-lakehouse
 ```
@@ -804,7 +891,7 @@ postgres
 
 ---
 
-# 🌬️ Access Airflow
+# Access Airflow
 
 Open:
 
@@ -830,7 +917,7 @@ From the Airflow UI you can:
 
 ---
 
-# ▶️ Running the Pipeline
+# Running the Pipeline
 
 The recommended way to run the complete pipeline is through Airflow.
 
@@ -854,7 +941,7 @@ Each stage depends on the successful completion of the previous stage.
 
 ---
 
-# 🧪 Running dbt Manually
+# Running dbt Manually
 
 Enter the Airflow scheduler container:
 
@@ -884,7 +971,7 @@ dbt build --project-dir dbt/codeforces_warehouse
 
 ---
 
-# 🗄️ PostgreSQL
+# PostgreSQL
 
 The warehouse database is:
 
@@ -910,7 +997,7 @@ The project uses a dedicated PostgreSQL container for the Codeforces warehouse a
 
 ---
 
-# 🔧 Useful Docker Commands
+# Useful Docker Commands
 
 ### Start services
 
@@ -968,7 +1055,7 @@ docker compose exec airflow-scheduler dbt --version
 
 ---
 
-# 🔐 Configuration
+# Configuration
 
 Environment-specific configuration is provided to Airflow through environment variables.
 
@@ -995,7 +1082,7 @@ For production deployments:
 
 ---
 
-# 🧪 Data Quality
+# Data Quality
 
 The pipeline includes a dedicated validation step after dbt.
 
@@ -1020,7 +1107,7 @@ Future validation improvements can include:
 
 ---
 
-# 📊 Example Metrics
+# Example Metrics
 
 The Power BI dashboard currently provides metrics such as:
 
@@ -1039,7 +1126,7 @@ These metrics are calculated from the analytical marts rather than directly from
 
 ---
 
-# 🧩 Design Principles
+# Design Principles
 
 The project follows several important design principles.
 
@@ -1087,7 +1174,7 @@ The Power BI layer consumes curated analytical marts instead of raw data.
 
 ---
 
-# 📌 Current Project Status
+# Current Project Status
 
 | Component                | Status         |
 | ------------------------ | -------------- |
@@ -1110,7 +1197,7 @@ The Power BI layer consumes curated analytical marts instead of raw data.
 
 ---
 
-# 🛣️ Future Improvements
+# Future Improvements
 
 Potential future improvements include:
 
@@ -1165,7 +1252,7 @@ Potential future improvements include:
 
 ---
 
-# 🎓 What This Project Demonstrates
+# What This Project Demonstrates
 
 This project demonstrates the ability to design and implement an end-to-end data engineering workflow rather than only building isolated scripts or dashboards.
 
