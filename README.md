@@ -79,6 +79,17 @@ The main objectives of this project are:
 
 ---
 
+### 📦 Docker Image
+
+[![GitHub Container Registry](https://img.shields.io/badge/GHCR-codeforces--data--lakehouse-blue?logo=docker)](https://github.com/ASWINa1636/Codeforces-Data-Lakehouse/pkgs/container/codeforces-data-lakehouse)
+
+Docker image published to GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/aswina1636/codeforces-data-lakehouse:latest
+```
+
+---
 ## Complete Architecture Diagram
 
 ```mermaid
