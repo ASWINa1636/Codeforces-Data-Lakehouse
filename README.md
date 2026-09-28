@@ -79,7 +79,7 @@ The main objectives of this project are:
 
 ---
 
-### 📦 Docker Image
+## Docker Image
 
 [![GitHub Container Registry](https://img.shields.io/badge/GHCR-codeforces--data--lakehouse-blue?logo=docker)](https://github.com/ASWINa1636/Codeforces-Data-Lakehouse/pkgs/container/codeforces-data-lakehouse)
 
