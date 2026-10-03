@@ -1,4 +1,4 @@
-# Codeforces Data Lakehouse
+# Codeforces Data Lakehouse [![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/aswina1636/codeforces-data-lakehouse?utm_source=readme&utm_medium=badge)
 
 An end-to-end data engineering and analytics project that transforms Codeforces problem-set data into a structured analytical warehouse and interactive Power BI dashboards.
 
@@ -228,6 +228,9 @@ flowchart LR
     style DOCKER fill:#0d1b2a,stroke:#2496ed,color:#fff
     style PGADMIN fill:#0d1b2a,stroke:#888,color:#fff
 ```
+
+[![Architecture diagram of aswina1636/codeforces-data-lakehouse](https://gitdiagram.com/aswina1636/codeforces-data-lakehouse/diagram.png)](https://gitdiagram.com/aswina1636/codeforces-data-lakehouse?utm_source=readme&utm_medium=picture)
+
 ---
 
 ## Technology Stack
